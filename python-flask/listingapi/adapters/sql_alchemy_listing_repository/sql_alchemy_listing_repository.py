@@ -45,12 +45,13 @@ class SqlAlchemyListingRepository(ports.ListingRepository):
         listing_model.id = listing_id
         self.db_session.add(listing_model)
 
-        self.db_session.flush()
-        price = entities.PriceEntity(
-            listing_id=listing_model.id, price_eur=listing_model.price
-        )
-        price_model = mappers.PriceMapper.from_entity_to_model(price)
-        self.db_session.add(price_model)
+        if existing_listing.price != listing_model.price:
+            self.db_session.flush()
+            price = entities.PriceEntity(
+                listing_id=listing_model.id, price_eur=listing_model.price
+            )
+            price_model = mappers.PriceMapper.from_entity_to_model(price)
+            self.db_session.add(price_model)
 
         self.db_session.commit()
 
