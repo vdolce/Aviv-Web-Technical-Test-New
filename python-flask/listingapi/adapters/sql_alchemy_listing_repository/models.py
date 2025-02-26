@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Optional
 
-from sqlalchemy import Column, DateTime, Float, Integer, String
+from sqlalchemy import Column, DateTime, Float, ForeignKey, Integer, String
 from sqlalchemy.orm import declarative_base
 
 
@@ -41,3 +41,14 @@ class ListingModel(Base):
 
     # contact
     contact_phone_number: Optional[str] = Column(String, nullable=True, default=None)
+
+
+class PriceModel(Base):
+    __tablename__ = "price_history"
+
+    id: int = Column(Integer, primary_key=True, autoincrement=True)
+    price: float = Column(Float, nullable=False)
+    listing_id: int = Column(Integer, ForeignKey("listing.id"), nullable=False)
+    created_date: datetime = Column(
+        DateTime, default=lambda: datetime.utcnow(), nullable=False
+    )
