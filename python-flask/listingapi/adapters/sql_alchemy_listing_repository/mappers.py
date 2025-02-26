@@ -1,4 +1,7 @@
-from listingapi.adapters.sql_alchemy_listing_repository.models import ListingModel
+from listingapi.adapters.sql_alchemy_listing_repository.models import (
+    ListingModel,
+    PriceModel,
+)
 from listingapi.domain import entities
 
 
@@ -43,3 +46,22 @@ class ListingMapper:
             "updated_date": listing.updated_date.isoformat(),
         }
         return listing_dict
+
+
+class PriceMapper:
+    @staticmethod
+    def from_entity_to_model(price: entities.PriceEntity) -> dict:
+        price_model = PriceModel(
+            listing_id=price.listing_id,
+            price=price.price_eur,
+        )
+
+        return price_model
+
+    @staticmethod
+    def from_model_to_dict(price: PriceModel) -> dict:
+        price_dict = {
+            "price_eur": price.price,
+            "created_date": price.created_date.isoformat(),
+        }
+        return price_dict

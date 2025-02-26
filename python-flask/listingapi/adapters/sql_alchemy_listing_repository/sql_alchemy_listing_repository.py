@@ -15,6 +15,14 @@ class SqlAlchemyListingRepository(ports.ListingRepository):
     def create(self, listing: entities.ListingEntity) -> dict:
         listing_model = mappers.ListingMapper.from_entity_to_model(listing)
         self.db_session.add(listing_model)
+        self.db_session.flush()
+
+        price = entities.PriceEntity(
+            listing_id=listing_model.id, price_eur=listing_model.price
+        )
+        price_model = mappers.PriceMapper.from_entity_to_model(price)
+        self.db_session.add(price_model)
+
         self.db_session.commit()
         data = mappers.ListingMapper.from_model_to_dict(listing_model)
         return data
@@ -36,6 +44,14 @@ class SqlAlchemyListingRepository(ports.ListingRepository):
         listing_model = mappers.ListingMapper.from_entity_to_model(listing)
         listing_model.id = listing_id
         self.db_session.add(listing_model)
+
+        self.db_session.flush()
+        price = entities.PriceEntity(
+            listing_id=listing_model.id, price_eur=listing_model.price
+        )
+        price_model = mappers.PriceMapper.from_entity_to_model(price)
+        self.db_session.add(price_model)
+
         self.db_session.commit()
 
         listing_dict = mappers.ListingMapper.from_model_to_dict(listing_model)
