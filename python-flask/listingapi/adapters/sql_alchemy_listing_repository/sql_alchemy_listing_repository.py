@@ -57,3 +57,16 @@ class SqlAlchemyListingRepository(ports.ListingRepository):
 
         listing_dict = mappers.ListingMapper.from_model_to_dict(listing_model)
         return listing_dict
+
+    def get_all_prices(self, listing_id: int) -> list[dict]:
+        prices_models = self.db_session.query(models.PriceModel, listing_id).all()
+        prices_models = (
+            self.db_session.query(models.PriceModel)
+            .filter(models.PriceModel.listing_id == listing_id)
+            .all()
+        )
+
+        prices = [
+            mappers.PriceMapper.from_model_to_dict(price) for price in prices_models
+        ]
+        return prices

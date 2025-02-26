@@ -19,3 +19,7 @@ class ListingRepository(abc.ABC):
     @abc.abstractmethod
     def update(self, id_: int, listing: entities.ListingEntity) -> dict:
         pass
+
+    @abc.abstractmethod
+    def get_all_prices(self, listing_id: int) -> list[dict]:
+        pass
